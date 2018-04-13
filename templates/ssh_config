@@ -1,0 +1,9 @@
+Host *
+    SendEnv LANG LC_*
+    HashKnownHosts yes
+    GSSAPIAuthentication yes
+    KexAlgorithms {{ secure_ssh_key_exchange_algorithms }}
+    Ciphers {{ secure_ssh_ciphers }}
+    MACs {{ secure_ssh_macs }}
+    PubkeyAuthentication yes
+    UseRoaming no

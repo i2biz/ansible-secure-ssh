@@ -1,0 +1,79 @@
+- name: Set local workdir name
+  set_fact:
+    local_workdir_root: /tmp/secure-ssh-ansible-workdir
+
+- name: Set local workdir name
+  set_fact:
+    local_workdir: "{{ local_workdir_root }}/{{ inventory_hostname }}"
+
+- name: lean workdir
+  delegate_to: localhost
+  become: False
+  file:
+    path: "{{ local_workdir }}"
+    state: absent
+
+- name: generate local workdir
+  delegate_to: localhost
+  become: False
+  file:
+    path: "{{ item }}"
+    mode: "0700"
+    state: directory
+  with_items:
+    - "{{ local_workdir_root }}"
+    - "{{ local_workdir }}"
+  notify:
+    - restart sshd
+
+- name: generate rsa key
+  delegate_to: localhost
+  become: False
+  command: ssh-keygen -t rsa -b 4096 -f {{ local_workdir }}/ssh_host_rsa_key -N ""
+
+- name: generate ed25519 key
+  delegate_to: localhost
+  become: False
+  command: ssh-keygen -t ed25519 -f {{ local_workdir }}/ssh_host_ed25519_key -N ""
+
+- name: List all host keys
+  find:
+    paths: /etc/ssh
+    patterns: "ssh_host_*key*"
+  register: tmp_glob
+
+- name: Remove all host keys
+  file:
+    path: "{{ item.path }}"
+    state: absent
+  with_items:
+    - "{{ tmp_glob.files }}"
+
+- name: Copy keys to server
+  copy:
+    src: "{{ local_workdir }}/{{ item }}"
+    dest: "/etc/ssh/{{ item }}"
+    owner: root
+    group: root
+    mode: 0600
+  with_items:
+    - "ssh_host_rsa_key"
+    - "ssh_host_rsa_key.pub"
+    - "ssh_host_ed25519_key"
+    - "ssh_host_ed25519_key.pub"
+
+- name: remove workdir
+  delegate_to: localhost
+  become: False
+  file:
+    path: "{{ local_workdir }}"
+    state: absent
+
+- name: add marker
+  file:
+    path: "{{ generate_keys_marker }}"
+    state: touch
+
+
+
+

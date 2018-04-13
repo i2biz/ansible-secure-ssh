@@ -1,0 +1,18 @@
+---
+# defaults file for secure-ssh
+
+
+secure_ssh_key_exchange_algorithms: curve25519-sha256@libssh.org,diffie-hellman-group-exchange-sha256
+
+secure_ssh_ciphers: chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr
+
+secure_ssh_macs: hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-512,hmac-sha2-256,umac-128@openssh.com
+
+secure_ssh_port: 22
+
+# This need to be boolean variables so either yes or no will work.
+secure_ssh_permit_root_login: no
+secure_ssh_password_auth: no
+
+secure_ssh_user_groups: []
+secure_ssh_users: []

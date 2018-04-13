@@ -1,0 +1,33 @@
+---
+- name: Set local workdir name
+  set_fact:
+    generate_keys_marker: /etc/ssh/.ssh-keys-generated
+
+- name: Verify marker file exists
+  stat:
+    path: "{{ generate_keys_marker }}"
+  register: keys_marker_out
+
+- import_tasks: "_generate_keys.yml"
+  when: not keys_marker_out.stat.exists
+
+- name: Update sshd config
+  template:
+    src: sshd_config
+    dest: /etc/ssh/sshd_config
+    validate: sshd -T -f %s
+  notify:
+  - restart sshd
+
+- name: Update ssh config
+  template:
+    src: ssh_config
+    dest: /etc/ssh/ssh_config
+
+
+- name: Install fail to ban
+  apt:
+    name: fail2ban
+    state: present
+    cache_valid_time: 3600
+    update_cache: yes

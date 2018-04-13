@@ -1,0 +1,16 @@
+galaxy_info:
+  author: Jacek Bzdak <jacek@askesis.pl)
+  description: Opinionated SSH setup
+  license: BSD
+
+  min_ansible_version: 2.3
+
+  platforms:
+    - name: Debian
+
+  galaxy_tags:
+    - security
+    - ssh
+    - sshd
+
+dependencies: []
