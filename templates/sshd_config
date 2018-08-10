@@ -29,7 +29,7 @@ AllowGroups {% for group in secure_ssh_user_groups %}{{ group }} {% endfor %}
 AllowUsers {% for user in secure_ssh_users %}{{ user }} {% endfor %}
 {% endif %}
 
-PasswordAuthentication {% if secure_ssh_permit_root_login %}yes{% else %}no{% endif %}
+PasswordAuthentication {% if secure_ssh_password_auth %}yes{% else %}no{% endif %}
 
 PermitRootLogin {% if secure_ssh_permit_root_login %}yes{% else %}no{% endif %}
 
