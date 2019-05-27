@@ -16,3 +16,5 @@ secure_ssh_password_auth: no
 
 secure_ssh_user_groups: []
 secure_ssh_users: []
+
+SSHD_CONFIG_EXTRAS: ""
